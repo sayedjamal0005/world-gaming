@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Gaming Platform</title>
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: #1f2833;
+            --gold: #f39c12;
+            --gold-hover: #d35400;
+            --text-color: #ffffff;
+            --text-muted: #c5c6c7;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            direction: ltr;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 20px;
+            color: var(--gold);
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #f39c12, #b7950b);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(243, 156, 18, 0.2);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--gold);
+            font-size: 18px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #45a29e;
+            background-color: #0b0c10;
+            color: white;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: var(--gold);
+            color: black;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--gold-hover);
+            color: white;
+        }
+
+        .btn-small {
+            background-color: #3498db;
+            color: white;
+            font-size: 18px;
+            padding: 15px;
+        }
+
+        .btn-big {
+            background-color: #e67e22;
+            color: white;
+            font-size: 18px;
+            padding: 15px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .easypaisa-box {
+            background-color: #111;
+            border: 1px dashed var(--gold);
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .easypaisa-box h3 {
+            margin: 5px 0;
+            color: #2ecc71;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .category-item {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px 5px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .category-item span {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .admin-btn {
+            background-color: var(--danger);
+            color: white;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>World Gaming</h1>
+        <div class="balance-card">
+            Rs. <span id="userBalance">0.00</span>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- User Login / Auth Card -->
+        <div class="card" id="authCard">
+            <h2>Account Login</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="text" id="phone" placeholder="Phone Number (EasyPaisa)">
+            <button onclick="login()">Login / Register</button>
+        </div>
+
+        <!-- Small & Big Game Section -->
+        <div class="card" id="gameCard" style="display:none;">
+            <h2>🎲 Small & Big Prediction Game</h2>
+            <p style="color: var(--text-muted); font-size: 13px;">Guess Small or Big to double your money!</p>
+            
+            <input type="number" id="betAmount" placeholder="Bet Amount (e.g. 500)">
+            
+            <div class="grid-2">
+                <button class="btn-small" onclick="placeBet('small')">SMALL (1 - 4)</button>
+                <button class="btn-big" onclick="placeBet('big')">BIG (5 - 9)</button>
+            </div>
+            <div id="gameStatus" style="margin-top: 10px; font-weight: bold; text-align: center;"></div>
+        </div>
+
+        <!-- Deposit Section -->
+        <div class="card" id="depositCard" style="display:none;">
+            <h2>💰 Deposit Funds (EasyPaisa)</h2>
+            <div class="easypaisa-box">
+                <p>Send payment to EasyPaisa Account:</p>
+                <h3>03453067511</h3>
+                <small>Account Title: World Gaming Admin</small>
+            </div>
+            <input type="number" id="depAmount" placeholder="Amount Sent (Rs)">
+            <input type="text" id="depTrx" placeholder="Transaction ID (TRX ID)">
+            <button onclick="submitDeposit()">Submit Deposit Request</button>
+        </div>
+
+        <!-- Withdraw Section -->
+        <div class="card" id="withdrawCard" style="display:none;">
+            <h2>💸 Withdraw Funds</h2>
+            <input type="number" id="wdAmount" placeholder="Amount to Withdraw (Rs)">
+            <input type="text" id="wdAccount" placeholder="EasyPaisa Number & Title">
+            <button onclick="submitWithdraw()">Submit Withdrawal Request</button>
+        </div>
+
+        <!-- 18 Game Categories Preview -->
+        <div class="card" id="categoriesCard" style="display:none;">
+            <h2>🎮 All 18 Game Categories</h2>
+            <div class="category-grid">
+                <div class="category-item"><span>🎲</span>Small & Big</div>
+                <div class="category-item"><span>🎰</span>Slots</div>
+                <div class="category-item"><span>🚀</span>Aviator</div>
+                <div class="category-item"><span>🃏</span>Poker</div>
+                <div class="category-item"><span>🎡</span>Roulette</div>
+                <div class="category-item"><span>📈</span>Trading</div>
+                <div class="category-item"><span>🎯</span>Ludo</div>
+                <div class="category-item"><span>💣</span>Mines</div>
+                <div class="category-item"><span>🐉</span>Dragon Tiger</div>
+                <div class="category-item"><span>⚽</span>Sports Betting</div>
+                <div class="category-item"><span>🎱</span>8 Ball Pool</div>
+                <div class="category-item"><span>👑</span>Teen Patti</div>
+                <div class="category-item"><span>🎴</span>Baccarat</div>
+                <div class="category-item"><span>🪙</span>Coin Flip</div>
+                <div class="category-item"><span>🏛️</span>Matka</div>
+                <div class="category-item"><span>🔮</span>Color Prediction</div>
+                <div class="category-item"><span>🏎️</span>Car Racing</div>
+                <div class="category-item"><span>💥</span>Crash</div>
+            </div>
+        </div>
+
+        <!-- Admin Control Section -->
+        <div class="card" id="adminCard" style="display:none;">
+            <h2 style="color: var(--danger);">🛡️ Admin Control Dashboard</h2>
+            <button class="admin-btn" onclick="resolveRound()">⚡ Resolve Game Round (Smart Profit Engine)</button>
+            <hr style="border-color: #333; margin: 15px 0;">
+            <h3>Pending Deposits & Withdrawals</h3>
+            <div id="pendingTransactions">Loading...</div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const phone = document.getElementById('phone').value;
+
+            if (!username || !phone) return alert("Please enter username and phone");
+
+            fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, phone })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    currentUser = data.user;
+                    document.getElementById('authCard').style.display = 'none';
+                    document.getElementById('gameCard').style.display = 'block';
+                    document.getElementById('depositCard').style.display = 'block';
+                    document.getElementById('withdrawCard').style.display = 'block';
+                    document.getElementById('categoriesCard').style.display = 'block';
+                    
+                    if (currentUser.role === 'admin') {
+                        document.getElementById('adminCard').style.display = 'block';
+                        loadAdminData();
+                    }
+
+                    updateUserUI();
+                }
+            });
+        }
+
+        function updateUserUI() {
+            fetch(`/api/user/${currentUser.id}`)
+                .then(res => res.json())
+                .then(user => {
+                    currentUser = user;
+                    document.getElementById('userBalance').innerText = user.balance.toFixed(2);
+                });
+        }
+
+        function submitDeposit() {
+            const amount = document.getElementById('depAmount').value;
+            const trx_id = document.getElementById('depTrx').value;
+
+            if (!amount || !trx_id) return alert("Fill all details");
+
+            fetch('/api/deposit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: currentUser.id, amount, trx_id })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                document.getElementById('depAmount').value = '';
+                document.getElementById('depTrx').value = '';
+            });
+        }
+
+        function submitWithdraw() {
+            const amount = document.getElementById('wdAmount').value;
+            const account_details = document.getElementById('wdAccount').value;
+
+            if (!amount || !account_details) return alert("Fill all details");
+
+            fetch('/api/withdraw', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: currentUser.id, amount, account_details })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) alert(data.error);
+                else {
+                    alert(data.message);
+                    document.getElementById('wdAmount').value = '';
+                    document.getElementById('wdAccount').value = '';
+                }
+            });
+        }
+
+        function placeBet(choice) {
+            const amount = document.getElementById('betAmount').value;
+            if (!amount || amount <= 0) return alert("Enter valid bet amount");
+
+            fetch('/api/bet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: currentUser.id, choice, amount })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) alert(data.error);
+                else {
+                    document.getElementById('gameStatus').innerText = `Bet placed on ${choice.toUpperCase()}! Waiting for round completion.`;
+                    updateUserUI();
+                }
+            });
+        }
+
+        // Admin Functions
+        function loadAdminData() {
+            fetch('/api/admin/transactions')
+                .then(res => res.json())
+                .then(data => {
+                    let html = '';
+                    if (data.length === 0) html = '<p>No pending requests.</p>';
+                    data.forEach(tx => {
+                        html += `
+                            <div style="border-bottom: 1px solid #444; padding: 8px 0;">
+                                <p><strong>${tx.type.toUpperCase()}</strong>: Rs. ${tx.amount} by ${tx.username} (${tx.phone})</p>
+                                <p><small>Trx/Account: ${tx.trx_id || tx.account_details}</small></p>
+                                <button onclick="txAction(${tx.id}, 'approve')" style="background:var(--success); width:auto; padding:5px 10px;">Approve</button>
+                                <button onclick="txAction(${tx.id}, 'reject')" style="background:var(--danger); width:auto; padding:5px 10px;">Reject</button>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('pendingTransactions').innerHTML = html;
+                });
+        }
+
+        function txAction(transaction_id, action) {
+            fetch('/api/admin/transaction-action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ transaction_id, action })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                loadAdminData();
+                updateUserUI();
+            });
+        }
+
+        function resolveRound() {
+            fetch('/api/admin/resolve-round', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    alert(`Round Resolved! Winner: ${data.winning_choice.toUpperCase()} (Total Small Pool: Rs.${data.total_small}, Total Big Pool: Rs.${data.total_big})`);
+                    updateUserUI();
+                });
+        }
+    </script>
+</body>
+</html>

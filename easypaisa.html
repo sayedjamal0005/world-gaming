@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyPaisa Wallet - World Gaming</title>
+    <style>
+        body { background: #121212; color: #fff; text-align: center; font-family: sans-serif; padding: 40px 16px; }
+        .card { background: #222; border: 1px solid #ff9900; border-radius: 8px; padding: 24px; max-width: 400px; margin: 0 auto; }
+        h1 { color: #ff9900; margin-bottom: 16px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: none; }
+        button { background: #ff9900; color: #000; font-weight: bold; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
+        .back-btn { display: inline-block; margin-top: 20px; color: #fff; background: #333; padding: 10px 20px; text-decoration: none; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>💳 EasyPaisa Wallet</h1>
+        <p>Deposit / Withdraw Funds</p>
+        <input type="number" id="amount" placeholder="Enter Amount (Rs.)" />
+        <button onclick="updateBalance()">Deposit</button>
+        <br/>
+        <a href="index.html" class="back-btn">⬅ Back to Dashboard</a>
+    </div>
+
+    <script>
+        function updateBalance() {
+            const amt = parseFloat(document.getElementById('amount').value);
+            if(amt > 0) {
+                let current = parseFloat(localStorage.getItem('user_balance') || "0.00");
+                localStorage.getItem('user_balance');
+                localStorage.setItem('user_balance', (current + amt).toString());
+                alert('Deposit Successful!');
+                window.location.href = 'index.html';
+            } else {
+                alert('Please enter valid amount');
+            }
+        }
+    </script>
+</body>
+</html>

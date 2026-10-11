@@ -3,170 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Gaming - Login & Dashboard</title>
+    <title>World Gaming</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
         body {
             background-color: #121212;
             color: #ffffff;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
         }
         .header {
-            background-color: #1a1a1a;
-            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #ff9900;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #ff9900;
+            margin-bottom: 30px;
         }
-        .header h1 {
+        .logo {
             color: #ff9900;
-            margin: 0;
             font-size: 20px;
+            font-weight: bold;
         }
-        .wallet {
+        .balance-box {
             background-color: #ff9900;
-            color: #000;
-            padding: 5px 12px;
-            font-weight: bold;
+            color: #000000;
+            padding: 6px 14px;
             border-radius: 4px;
+            font-weight: bold;
+            font-size: 15px;
         }
-        .container {
-            max-width: 400px;
-            margin: 50px auto;
-            background: #1e1e1e;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 24px;
         }
-        h2 {
+        .welcome-title {
             color: #ff9900;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            color: #bbb;
-        }
-        input {
-            width: 100%;
-            padding: 12px;
-            background: #2a2a2a;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background: #ff9900;
-            border: none;
-            color: #000;
+            font-size: 24px;
             font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 16px;
+            margin-bottom: 8px;
         }
-        .btn:hover {
-            background: #e68a00;
+        .welcome-subtitle {
+            color: #cccccc;
+            font-size: 14px;
         }
-        .dashboard {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-        .game-grid {
+        .grid-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
         }
         .game-card {
-            background: #252525;
-            padding: 20px;
-            border-radius: 6px;
-            border: 1px solid #444;
+            background-color: #222222;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 16px 12px;
+            text-align: center;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: border-color 0.2s, background-color 0.2s;
             cursor: pointer;
         }
-        .game-card:hover {
+        .game-card:hover, .game-card:active {
             border-color: #ff9900;
+            background-color: #2a2a2a;
+        }
+        .wallet-card {
+            border-color: #ff9900;
+        }
+        .logout-btn {
+            width: 100%;
+            background-color: #333333;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+        .logout-btn:hover {
+            background-color: #444444;
         }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1>World Gaming</h1>
-        <div class="wallet" id="wallet-balance">Rs. 0.00</div>
-    </div>
-
-    <!-- Login Section -->
-    <div class="container" id="login-container">
-        <h2>Account Login</h2>
-        <form id="login-form" onsubmit="handleLogin(event)">
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" id="username" placeholder="Enter username" required>
-            </div>
-            <div class="form-group">
-                <label>Phone Number (EasyPaisa)</label>
-                <input type="text" id="phone" placeholder="03XXXXXXXXX" required>
-            </div>
-            <button type="submit" class="btn">Login / Register</button>
-        </form>
-    </div>
-
-    <!-- Dashboard Section -->
-    <div class="container dashboard" id="dashboard-container">
-        <h2>Welcome, <span id="user-display"></span>!</h2>
-        <p>Your Account is Active & Ready to Play.</p>
-        <div class="game-grid">
-            <div class="game-card" onclick="alert('Starting Game 1!')">🎮 Aviator</div>
-            <div class="game-card" onclick="alert('Starting Game 2!')">🎲 Ludo King</div>
-            <div class="game-card" onclick="alert('Starting Game 3!')">🪙 Toss Game</div>
-            <div class="game-card" onclick="alert('Opening Deposit/Withdraw!')">💳 EasyPaisa Wallet</div>
+    <div class="app-container">
+        <div class="header">
+            <div class="logo">World Gaming</div>
+            <!-- Initial balance default is 0.00 -->
+            <div class="balance-box" id="balanceDisplay">Rs. 0.00</div>
         </div>
-        <button class="btn" style="background:#444; color:#fff; margin-top:30px;" onclick="handleLogout()">Logout</button>
+
+        <div class="welcome-section">
+            <h1 class="welcome-title">Welcome, jamalshah!</h1>
+            <p class="welcome-subtitle">Your Account is Active & Ready to Play.</p>
+        </div>
+
+        <div class="grid-container">
+            <a href="aviator.html" class="game-card">
+                <span>🎮</span> Aviator
+            </a>
+            <a href="ludo.html" class="game-card">
+                <span>🎲</span> Ludo King
+            </a>
+            <a href="toss.html" class="game-card">
+                <span>🪙</span> Toss Game
+            </a>
+            <a href="easypaisa.html" class="game-card wallet-card">
+                <span>💳</span> EasyPaisa Wallet
+            </a>
+        </div>
+
+        <button class="logout-btn" onclick="alert('Logging out...')">Logout</button>
     </div>
 
     <script>
-        function handleLogin(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const phone = document.getElementById('phone').value;
-
-            if (username && phone) {
-                localStorage.setItem('wg_user', username);
-                document.getElementById('user-display').innerText = username;
-                document.getElementById('login-container').style.display = 'none';
-                document.getElementById('dashboard-container').style.display = 'block';
-                document.getElementById('wallet-balance').innerText = 'Rs. 500.00';
-            }
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('wg_user');
-            document.getElementById('dashboard-container').style.display = 'none';
-            document.getElementById('login-container').style.display = 'block';
-        }
-
-        window.onload = function() {
-            const savedUser = localStorage.getItem('wg_user');
-            if (savedUser) {
-                document.getElementById('user-display').innerText = savedUser;
-                document.getElementById('login-container').style.display = 'none';
-                document.getElementById('dashboard-container').style.display = 'block';
-                document.getElementById('wallet-balance').innerText = 'Rs. 500.00';
-            }
-        }
+        // Load initial balance or get from localStorage
+        const userBalance = localStorage.getItem('user_balance') || "0.00";
+        document.getElementById('balanceDisplay').innerText = `Rs. ${parseFloat(userBalance).toFixed(2)}`;
     </script>
 </body>
 </html>
